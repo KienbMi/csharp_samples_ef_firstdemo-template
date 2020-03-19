@@ -202,8 +202,10 @@ namespace EfDemo.Persistence.Test
 
             using (ApplicationDbContext deleteContext = GetDbContext(dbName))
             {
-                SchoolClass schoolClass = deleteContext.SchoolClasses.Single(sc => sc.Name == "6ABIF_6AKIF");
-                var pupils = deleteContext.Pupils.ToList();
+                SchoolClass schoolClass = deleteContext.SchoolClasses
+                    .Include(sc => sc.Pupils)
+                    .Single(sc => sc.Name == "6ABIF_6AKIF");
+                //var pupils = deleteContext.Pupils.ToList(); => durch include ersetzt
                 Pupil pupil1 = schoolClass.Pupils.Single(p => p.LastName == "Musterkind");
                 Pupil pupil2 = schoolClass.Pupils.Single(p => p.LastName == "Huber");
 
@@ -270,9 +272,13 @@ namespace EfDemo.Persistence.Test
 
             using (ApplicationDbContext moveContext = GetDbContext(dbName))
             {
-                SchoolClass schoolClass5 = moveContext.SchoolClasses.Single(sc => sc.Name == "5ABIF_5AKIF");
-                SchoolClass schoolClass6 = moveContext.SchoolClasses.Single(sc => sc.Name == "6ABIF_6AKIF");
-                var pupils = moveContext.Pupils.ToList();
+                SchoolClass schoolClass5 = moveContext.SchoolClasses
+                                                .Include(sc => sc.Pupils)
+                                                .Single(sc => sc.Name == "5ABIF_5AKIF");
+                SchoolClass schoolClass6 = moveContext.SchoolClasses
+                                                .Include(sc => sc.Pupils)
+                                                .Single(sc => sc.Name == "6ABIF_6AKIF");
+                //var pupils = moveContext.Pupils.ToList(); => durch include ersetzt
                 Pupil pupil = schoolClass6.Pupils.Single(p => p.LastName == "Musterkind");
 
                 schoolClass5.Pupils.Add(pupil);
